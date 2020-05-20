@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!--Chord - Python wrapper around d3-chord
+
+    This package enables the generation of Chord diagrams. They can be saved 
+    directly to HTML files or displayed in a Jupyter Notebook output cell.
+
+    Copyright 2020, Dr. Shahin Rostami
+    http://shahinrostami.com
+    https://github.com/shahinrostami/chord
+    https://pypi.org/project/chord/
+    -->
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>Chord Diagram</title>
+    <!-- Google Fonts -->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,900" rel="stylesheet" type="text/css" />
+
+    <style>
+        .tippy-content {
+            font-family: "Lato", sans-serif;
+        }
+        
+        #chart-50777a45 {
+            font-size: ;
+            font-family: "Lato", sans-serif;
+            text-align: center;
+            fill: #454545;
+        }
+        
+        #chart-50777a45 svg {
+            max-width: px;
+        }
+        
+        @media (min-width: 600px) {
+            #chart-50777a45 {
+                font-size: ;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="chart-50777a45" class="chord">
+    </div>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    <script>
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "https://d3js.org/d3.v5.min.js";
+
+        script.onload = function() {
+
+            var script2 = document.createElement("script");
+            script2.type = "text/javascript";
+            script2.src = "https://shahinrostami.com/assets/chord/script.js";
+            script2.onload = function() {
+                margin = {
+                    left: 5,
+                    top: 5,
+                    right: 5,
+                    bottom: 5
+                };
+                width = Math.min(window.innerWidth, ) - margin.left - margin.right;
+                height = Math.min(window.innerWidth, ) - margin.top - margin.bottom;
+                innerRadius = Math.min(width, height) * 0.39;
+                outerRadius = innerRadius * 1.1;
+
+                tag_id = "chart-50777a45";
+                padding = 0.01;
+                Names = ['babi', 'bout', 'brooklyn', 'feel', 'game', 'girl', 'hear', 'jigga', 'money', 'niggaz', 'real', 'say', 'stop', 'wanna', 'want', 'life', 'world', 'bitch', 'young', 'hard', 'your'];
+                colors = d3.schemeSet1;
+                opacityDefault = 0.8;
+                matrix = [
+                    [0, 24, 34, 34, 18, 21, 29, 24, 15, 66, 28, 15, 28, 18, 34, 28, 24, 25, 4, 0, 0],
+                    [34, 16, 0, 28, 15, 19, 31, 19, 10, 77, 33, 15, 23, 34, 22, 30, 30, 26, 0, 0, 0],
+                    [34, 29, 28, 0, 23, 34, 43, 38, 25, 92, 56, 15, 32, 24, 47, 40, 23, 29, 3, 1, 1],
+                    [18, 15, 15, 23, 0, 17, 28, 23, 7, 52, 22, 10, 19, 14, 30, 25, 19, 20, 1, 2, 1],
+                    [21, 28, 19, 34, 17, 0, 36, 28, 19, 69, 39, 14, 23, 24, 34, 24, 26, 24, 1, 0, 0],
+                    [29, 31, 31, 43, 28, 36, 0, 45, 23, 96, 48, 23, 42, 34, 40, 28, 26, 38, 2, 1, 0],
+                    [15, 27, 10, 25, 7, 19, 23, 29, 0, 59, 24, 16, 22, 18, 21, 14, 25, 12, 2, 2, 0],
+                    [66, 55, 77, 92, 52, 69, 96, 85, 59, 0, 95, 43, 77, 65, 83, 76, 87, 72, 4, 3, 1],
+                    [15, 18, 15, 15, 10, 14, 23, 16, 16, 43, 31, 0, 25, 15, 15, 19, 30, 18, 0, 0, 0],
+                    [28, 24, 23, 32, 19, 23, 42, 40, 22, 77, 42, 25, 0, 22, 31, 25, 34, 33, 2, 1, 1],
+                    [18, 13, 34, 24, 14, 24, 34, 26, 18, 65, 31, 15, 22, 0, 29, 23, 32, 27, 1, 0, 0],
+                    [34, 29, 22, 47, 30, 34, 40, 26, 21, 83, 41, 15, 31, 29, 0, 32, 27, 28, 3, 0, 0],
+                    [28, 24, 30, 40, 25, 24, 28, 29, 14, 76, 32, 19, 25, 23, 32, 0, 25, 32, 4, 0, 0],
+                    [24, 25, 30, 23, 19, 26, 26, 26, 25, 87, 42, 30, 34, 32, 27, 25, 0, 30, 0, 0, 1],
+                    [25, 19, 26, 29, 20, 24, 38, 26, 12, 72, 39, 18, 33, 27, 28, 32, 30, 0, 1, 1, 0],
+                    [28, 27, 33, 56, 22, 39, 48, 31, 24, 95, 0, 31, 42, 31, 41, 32, 42, 39, 2, 1, 1],
+                    [4, 3, 0, 3, 1, 1, 2, 2, 2, 4, 2, 0, 2, 1, 3, 4, 0, 1, 0, 0, 0],
+                    [24, 0, 16, 29, 15, 28, 31, 25, 27, 55, 27, 18, 24, 13, 29, 24, 25, 19, 3, 0, 0],
+                    [0, 0, 0, 1, 2, 0, 1, 3, 2, 3, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0],
+                    [24, 25, 19, 38, 23, 28, 45, 0, 29, 85, 31, 16, 40, 26, 26, 29, 26, 26, 2, 3, 0],
+                    [0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0]
+                ];
+                wrap_labels = false;
+                credit = false;
+                details = true;
+
+                ////////////////////////////////////////////////////////////
+                /////////// Create scale and layout functions //////////////
+                ////////////////////////////////////////////////////////////
+
+                var colors = d3
+                    .scaleOrdinal()
+                    .domain(d3.range(Names.length))
+                    .range(colors);
+
+                //A "custom" d3 chord function that automatically sorts the order of the chords in such a manner to reduce overlap
+                var chord = customChordLayout()
+                    .padding(padding)
+                    .sortChords(d3.descending) //which chord should be shown on top when chords cross. Now the biggest chord is at the bottom
+                    .matrix(matrix);
+
+                var arc = d3
+                    .arc()
+                    .innerRadius(innerRadius * 1.01)
+                    .outerRadius(outerRadius);
+
+                var path = d3.ribbon().radius(innerRadius);
+
+                ////////////////////////////////////////////////////////////
+                ////////////////////// Create SVG //////////////////////////
+                ///////////////////////////////////////////////////////////
+
+                var svg = d3
+                    .select("#" + tag_id)
+                    .append("svg")
+                    .attr(
+                        "viewBox",
+                        "0 0 " +
+                        (width + margin.left + margin.right) +
+                        " " +
+                        (height + margin.top + margin.bottom)
+                    )
+                    .attr("preserveAspectRatio", "xMinYMin meet")
+                    .append("g")
+                    .attr(
+                        "transform",
+                        "translate(" +
+                        (width / 2 + margin.left) +
+                        "," +
+                        (height / 2 + margin.top) +
+                        ")"
+                    );
+
+                d3.select("#" + tag_id)
+                    .append("span")
+                    .style("display", "block")
+                    .style("font-size", "12px")
+                    .style("text-align", "right")
+                    .style("font-family", '"Arial", sans-serif')
+                    .html(
+                        'made with <a href="https://github.com/shahinrostami/chord">chord</a></span>'
+                    );
+
+                if (credit) {
+                    d3.select("#" + tag_id).select("span")
+                        .append("span")
+                        .style("font-size", "12px")
+                        .style("font-family", '"Arial", sans-serif')
+                        .html(
+                            ' [<a href="https://twitter.com/shahinrostami">@ShahinRostami</a>]</span>'
+                        );
+                }
+
+                ////////////////////////////////////////////////////////////
+                /////////////// Create the gradient fills //////////////////
+                ////////////////////////////////////////////////////////////
+
+                //Function to create the id for each chord gradient
+                function getGradID(d) {
+                    return (
+                        "linkGrad-" + tag_id + "-" + d.source.index + "-" + d.target.index
+                    );
+                }
+
+
+
+
+                //Create the gradients definitions for each chord
+                var grads = svg
+                    .append("defs")
+                    .selectAll("linearGradient")
+                    .data(chord.chords())
+                    .enter()
+                    .append("linearGradient")
+                    .attr("id", getGradID)
+                    .attr("gradientUnits", "userSpaceOnUse")
+                    .attr("x1", function(d, i) {
+                        return (
+                            innerRadius *
+                            Math.cos(
+                                (d.source.endAngle - d.source.startAngle) / 2 +
+                                d.source.startAngle -
+                                Math.PI / 2
+                            )
+                        );
+                    })
+                    .attr("y1", function(d, i) {
+                        return (
+                            innerRadius *
+                            Math.sin(
+                                (d.source.endAngle - d.source.startAngle) / 2 +
+                                d.source.startAngle -
+                                Math.PI / 2
+                            )
+                        );
+                    })
+                    .attr("x2", function(d, i) {
+                        return (
+                            innerRadius *
+                            Math.cos(
+                                (d.target.endAngle - d.target.startAngle) / 2 +
+                                d.target.startAngle -
+                                Math.PI / 2
+                            )
+                        );
+                    })
+                    .attr("y2", function(d, i) {
+                        return (
+                            innerRadius *
+                            Math.sin(
+                                (d.target.endAngle - d.target.startAngle) / 2 +
+                                d.target.startAngle -
+                                Math.PI / 2
+                            )
+                        );
+                    });
+
+                //Set the starting color (at 0%)
+                grads
+                    .append("stop")
+                    .attr("offset", "0%")
+                    .attr("stop-color", function(d) {
+                        return colors(d.source.index);
+                    });
+
+                //Set the ending color (at 100%)
+                grads
+                    .append("stop")
+                    .attr("offset", "100%")
+                    .attr("stop-color", function(d) {
+                        return colors(d.target.index);
+                    });
+
+                ////////////////////////////////////////////////////////////
+                ////////////////// Draw outer Arcs /////////////////////////
+                ////////////////////////////////////////////////////////////
+
+                var outerArcs = svg
+                    .selectAll("g.group")
+                    .data(chord.groups)
+                    .enter()
+                    .append("g")
+                    .attr("class", "group")
+                    .on("mouseover", fade(0.1, 1))
+                    .on("mouseout", fade(opacityDefault, opacityDefault));
+
+                outerArcs
+                    .append("path")
+                    .style("fill", function(d) {
+                        return colors(d.index);
+                    })
+                    .attr("d", arc)
+                    .each(function(d, i) {
+                        //Search pattern for everything between the start and the first capital L
+                        var firstArcSection = /(^.+?)L/;
+
+                        //Grab everything up to the first Line statement
+                        var newArc = firstArcSection.exec(d3.select(this).attr("d"))[1];
+                        //Replace all the comma's so that IE can handle it
+                        newArc = newArc.replace(/,/g, " ");
+
+                        //If the end angle lies beyond a quarter of a circle (90 degrees or pi/2)
+                        //flip the end and start position
+                        if (
+                            (d.endAngle > (90 * Math.PI) / 180) &
+                            (d.startAngle < (270 * Math.PI) / 180)
+                        ) {
+                            var startLoc = /M(.*?)A/, //Everything between the first capital M and first capital A
+                                middleLoc = /A(.*?)0 0 1/, //Everything between the first capital A and 0 0 1
+                                endLoc = /0 0 1 (.*?)$/; //Everything between the first 0 0 1 and the end of the string (denoted by $)
+                            //Flip the direction of the arc by switching the start en end point (and sweep flag)
+                            //of those elements that are below the horizontal line
+                            var newStart = endLoc.exec(newArc)[1];
+                            var newEnd = startLoc.exec(newArc)[1];
+                            var middleSec = middleLoc.exec(newArc)[1];
+
+                            //Build up the new arc notation, set the sweep-flag to 0
+                            newArc = "M" + newStart + "A" + middleSec + "0 0 0 " + newEnd;
+                        } //if
+
+                        //Create a new invisible arc that the text can flow along
+                        svg
+                            .append("path")
+                            .attr("class", "hiddenArcs")
+                            .attr("id", "arc-" + tag_id + "-" + i)
+                            .attr("d", newArc)
+                            .style("fill", "none");
+
+                        ////////////////////////////////////////////////////////////
+                        ////////////////// Append Names ////////////////////////////
+                        ////////////////////////////////////////////////////////////
+
+                        //Append the label names on the outside
+
+                        if (wrap_labels) {
+                            outerArcs
+                                .append("text")
+                                .attr("class", "titles")
+                                .attr("dy", function(d, i) {
+                                    return (d.endAngle > (90 * Math.PI) / 180) &
+                                        (d.startAngle < (270 * Math.PI) / 180) ?
+                                        25 :
+                                        -16;
+                                })
+                                .append("textPath")
+                                .attr("startOffset", "50%")
+                                .style("text-anchor", "middle")
+                                .attr("xlink:href", function(d, i) {
+                                    return "#arc-" + tag_id + "-" + i;
+                                })
+                                .text(function(d, i) {
+                                    return Names[i];
+                                });
+                        } else {
+                            //Append the label names on the outside
+                            outerArcs
+                                .append("text")
+                                .each(function(d) {
+                                    d.angle = (d.startAngle + d.endAngle) / 2;
+                                })
+                                .attr("dy", ".35em")
+                                .attr("class", "titles")
+                                .attr("text-anchor", function(d) {
+                                    return d.angle > Math.PI ? "end" : null;
+                                })
+                                .attr("transform", function(d) {
+                                    return (
+                                        "rotate(" +
+                                        ((d.angle * 180) / Math.PI - 90) +
+                                        ")" +
+                                        "translate(" +
+                                        (outerRadius + 10) +
+                                        ")" +
+                                        (d.angle > Math.PI ? "rotate(180)" : "")
+                                    );
+                                })
+                                .text(function(d, i) {
+                                    return Names[i];
+                                });
+                        }
+
+                        ////////////////////////////////////////////////////////////
+                        ////////////////// Draw inner chords ///////////////////////
+                        ////////////////////////////////////////////////////////////
+
+                        svg
+                            .selectAll("path.chord")
+                            .data(chord.chords)
+                            .enter()
+                            .append("path")
+                            .attr("class", "chord")
+                            .style("fill", function(d) {
+                                return "url(#" + getGradID(d) + ")";
+                            })
+                            .style("opacity", opacityDefault)
+                            .attr("d", path)
+                            .on("mouseover", mouseoverChord(details))
+                            .on("mouseout", mouseoutChord(opacityDefault, opacityDefault));
+                    });
+                ////////////////////////////////////////////////////////////
+                ////////////////// Extra Functions /////////////////////////
+                ////////////////////////////////////////////////////////////
+
+                //Returns an event handler for fading a given chord group.
+                function fade(opacityIn, opacityOut) {
+                    return function(d, i) {
+                        d3.select(this.ownerSVGElement)
+                            .selectAll("path.chord")
+                            .filter(function(d) {
+                                return d.source.index !== i && d.target.index !== i;
+                            })
+                            .transition()
+                            .style("opacity", opacityIn);
+
+                        d3.select(this.ownerSVGElement)
+                            .selectAll("path.chord")
+                            .filter(function(d) {
+                                return d.source.index == i || d.target.index == i;
+                            })
+                            .transition()
+                            .style("opacity", opacityOut);
+
+
+                    };
+                } //fade
+
+                //Highlight hovered over chord
+                function mouseoverChord(details) {
+                    return function(d, i) {
+
+                        d3.select(this.ownerSVGElement)
+                            .selectAll("path.chord")
+                            .transition()
+                            .style("opacity", 0.1);
+                        //Show hovered over chord with full opacity
+                        d3.select(this).transition().style("opacity", 1);
+
+                        tippy_content = "<span style='font-weight:900'>" +
+                            Names[d.source.index] +
+                            "</span> and <span style='font-weight:900'>" +
+                            Names[d.target.index] +
+                            "</span><br>occur together in <span style='font-weight:900'>" +
+                            d.source.value +
+                            "</span> instances";
+
+
+                        if (Array.isArray(details) && details.length) {
+                            if (Array.isArray(details[d.source.index][d.target.index]) && details[d.source.index][d.target.index].length) {
+                                tippy_content = tippy_content +
+                                    "<br><br><span><em>" +
+                                    details[d.source.index][d.target.index].join(', ') +
+                                    "</em></span>";
+                            }
+                        }
+
+
+
+                        tippy(this, {
+                            allowHTML: true,
+                            followCursor: true,
+                            content: tippy_content,
+                            size: "large",
+                            arrow: true,
+                        });
+
+                        /*d3.select("#list")
+                          .html(
+                            details[d.source.index][d.target.index]
+                          );*/
+
+
+                    };
+
+                } //fade
+
+                //Bring all chords back to default opacity
+                function mouseoutChord(opacityIn, opacityOut) {
+                    return function(d, i) {
+                        d3.select(this.ownerSVGElement)
+                            .selectAll("path.chord")
+                            .transition()
+                            .style("opacity", opacityOut);
+                    };
+                    //Set opacity back to default for all
+                } //function mouseoutChord
+
+
+            };
+            document.body.appendChild(script2);
+        };
+
+        document.body.appendChild(script);
+    </script>
+    <script></script>
+</body>
+
+</html>
